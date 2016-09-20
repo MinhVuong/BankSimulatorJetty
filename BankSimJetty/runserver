@@ -1,0 +1,3 @@
+#!/bin/sh
+. /123Pay/apps/Procfile
+$START_PARAM

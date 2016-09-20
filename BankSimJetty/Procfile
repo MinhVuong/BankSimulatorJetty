@@ -1,0 +1,43 @@
+# Khoapla
+#fr=jetty
+JMXHOST=0.0.0.0
+ZPORT=8080
+SOAPPORT=8181
+JMXPORT=8282
+HOME=/123Pay/apps
+APPENV=development
+XMS=256m
+CONF=$HOME/conf
+JARFILE=$HOME/bin/`ls $HOME/bin/*.jar|awk -F/ '{print $NF}'`
+JVM_PROFILE="/123Pay/java/lib/statsd-jvm-profiler.jar"
+pid_file=$HOME/tmp/serviced.pid
+log_file=$HOME/tmp/serviced.log
+JAVA=$JAVA_HOME/bin/java
+JVM_OPTS=" \
+	-Dzport=$ZPORT \
+        -Dsport=$SOAPPORT \
+        -Dzname=$APPNAME \
+        -Dforeground=true \
+        -Xmx$XMS \
+        -XX:SurvivorRatio=8 \
+        -XX:+UseParNewGC \
+        -XX:+UseConcMarkSweepGC \
+        -XX:+CMSParallelRemarkEnabled \
+        -XX:MaxTenuringThreshold=1 \
+        -XX:CMSInitiatingOccupancyFraction=75 \
+        -XX:+UseCMSInitiatingOccupancyOnly \
+        -XX:+HeapDumpOnOutOfMemoryError \
+                -XX:PermSize=$XMS \
+                -XX:MaxPermSize=$XMS \
+                -XX:HeapDumpPath=$HOME/tmp/heap_dump.hprof \
+                -Djava.rmi.server.hostname=$JMXHOST \
+	-Dcom.sun.management.jmxremote.rmi.port=$JMXPORT
+        -Dcom.sun.management.jmxremote.port=$JMXPORT \
+        -Dcom.sun.management.jmxremote.ssl=false \
+        -Dcom.sun.management.jmxremote.authenticate=false \
+        -Dconfig=$CONF \
+        -Dapppath=$HOME \
+        -Dappenv=$APPENV \
+                -Dlog4j.configurationFile=$CONF/log4j2.xml"
+
+START_PARAM="java $JVM_OPTS -jar $JARFILE"

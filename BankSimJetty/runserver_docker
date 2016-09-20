@@ -1,0 +1,53 @@
+#!/bin/sh
+#khoapla#
+export APPNAME=mi-payment
+export JAVA_HOME=/123Pay/java
+export HOME=/123Pay/apps
+cd $HOME
+export JMXHOST=localhost
+export JMXPORT=7207
+export APPENV=development
+export XMS=256m
+export CONF=config
+export JARFILE=`ls $HOME/bin/*.jar|awk -F/ '{print $NF}'`
+export JVM_PROFILE="/123Pay/java/lib/statsd-jvm-profiler.jar"
+pid_file=$HOME/tmp/serviced.pid
+log_file=$HOME/tmp/serviced.log
+#-javaagent:$JVM_PROFILE=server=statsd.dev.123pay.vn,port=8125,prefix=mi-payment
+# Arguments to pass to the JVM
+JVM_OPTS=" \
+        -Dzname=$APPNAME \
+        -Dforeground=true \
+        -Xmx$XMS \
+        -XX:SurvivorRatio=8 \
+        -XX:+UseParNewGC \
+        -XX:+UseConcMarkSweepGC \
+        -XX:+CMSParallelRemarkEnabled \
+        -XX:MaxTenuringThreshold=1 \
+        -XX:CMSInitiatingOccupancyFraction=75 \
+        -XX:+UseCMSInitiatingOccupancyOnly \
+        -XX:+HeapDumpOnOutOfMemoryError \
+		-XX:PermSize=$XMS \
+		-XX:MaxPermSize=$XMS \
+		-XX:HeapDumpPath=$HOME/tmp/heap_dump.hprof \
+		-Djava.rmi.server.hostname=$JMXHOST \
+		-Dcom.sun.management.jmxremote \
+        -Dcom.sun.management.jmxremote.port=$JMXPORT \
+        -Dcom.sun.management.jmxremote.ssl=false \
+        -Dcom.sun.management.jmxremote.authenticate=false \
+        -Dconfig=$CONF \
+        -Dapppath=$HOME \
+        -Dappenv=$APPENV \		
+		-Dlog4j.configurationFile=config/log4j2.xml \
+		-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
+		-Ducpmin=4 \
+		-Dmnthrs=10 \
+		-Dmxthrs=100"
+
+if [ -x $JAVA_HOME/bin/java ]; then
+    JAVA=$JAVA_HOME/bin/java
+else
+    JAVA=`which java`
+fi
+
+$JAVA $JVM_OPTS -jar  bin/$JARFILE 2> $log_file
