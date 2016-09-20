@@ -124,7 +124,6 @@ public class BankServiceImpl implements IBankService {
             cs.setInt(11, boBS.getIsSuccess());
             cs.setInt(12, boBS.getiOrderStatus());
             Gson gson = new Gson();
-            System.out.println("db: " + gson.toJson(boBS));
             
             cs.registerOutParameter(13, Types.INTEGER);
             cs.registerOutParameter(14, Types.INTEGER);
@@ -136,11 +135,17 @@ public class BankServiceImpl implements IBankService {
             boBS.setOrderStatus(cs.getInt(14));
             boBS.setMiNotifyUrl(cs.getString(15));
             boBS.setDescription(cs.getString(16));
-            if(!boBS.getBankResponseCode().equals("1")){
-                return String.valueOf(cs.getInt(14));
-            }else{
+            System.out.println("db: " + gson.toJson(boBS));
+            if(boBS.getIsSuccess() == 1){
                 return String.valueOf(cs.getInt(13));
+            }else{
+                return String.valueOf(cs.getInt(14));
             }
+//            if(!boBS.getBankResponseCode().equals("1")){
+//                return String.valueOf(cs.getInt(14));
+//            }else{
+//                return String.valueOf(cs.getInt(13));
+//            }
         } catch (Exception e) {
             boBS.setResponseCode(5000);
             return Constants.ERROR_5000;

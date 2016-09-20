@@ -266,7 +266,7 @@ final class VerifyOTPRequestProcessor extends BaseRequestProcessor {
 
     @Override
     protected String getAPIName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Service.VERIFY_OTP;
     }
 
     private String validate(String orderNo, String otp, String numberInput, String checksum) {

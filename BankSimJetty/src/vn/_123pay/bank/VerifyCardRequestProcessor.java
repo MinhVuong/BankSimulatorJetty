@@ -202,7 +202,7 @@ final class VerifyCardRequestProcessor extends BaseRequestProcessor {
                 boBaseResponse = Service.commonService.getResponse(boBaseResponse.getDetailResponseCode());
                 //build response result
                 buildResponse(boResponse, boOrder);
-
+                buildResponse(boResponse, boBaseResponse);
                 //build payport URL
                 String payportURL = boBank.getPayportURL() + "?" + ConstantBS.TRANX_REF_PARAM + "=" + boOrder.getOrderNo();
                 Constants.appendMessage(super.getLogBuilder(), "RedirectURL:" + payportURL);
