@@ -224,6 +224,11 @@ final class VerifyOTPRequestProcessor extends BaseRequestProcessor {
             } else if (Constants.RESPONSE_TIME_OUT.equals(response)) {
                 // notify Pending
                 status = Constants.NOTIFY_PENDING;
+                boBaseResponse = Service.commonService.getResponse(Constants.ERROR_7299);
+                Constants.appendParams(super.getLogBuilder(), boResponse.getGroupResponseCode(), boResponse.getDetailResponseCode(),
+                        boEIB.getOrderStatus() == null ? "" : ("" + boEIB.getOrderStatus()),
+                        boEIB.getBankResponseCode(), boResponse.getRedirectURL());
+                return new Result<>("", gson.toJson(boBaseResponse), null).setIsOldFashion(true);
             } else if (Constants.RESPONSE_CODE_1.equals(response) && boEIB.getIsSuccess() == 1) {
                 status = Constants.NOTIFY_SUCCESS;
             } else {
@@ -258,7 +263,7 @@ final class VerifyOTPRequestProcessor extends BaseRequestProcessor {
             Constants.appendParams(super.getLogBuilder(), boResponse.getGroupResponseCode(), boResponse.getDetailResponseCode(),
                     boResponse.getOrderStatus() == null ? "" : ("" + boResponse.getOrderStatus()),
                     boResponse.getBankResponseCode(), boResponse.getRedirectURL());
-           
+
             System.out.println("chay chua");
             return new Result<>("", gson.toJson(boResponse), null).setIsOldFashion(true);
         }
@@ -330,13 +335,13 @@ final class VerifyOTPRequestProcessor extends BaseRequestProcessor {
             json.addProperty("checksum", boNQRequest.getChecksum());
             NotifyHelper notifyH = new NotifyHelper();
             String result = notifyH.postNotify(notifyUrl, json, "application/json", "application/json");
-            if(StringUtils.isEmpty(result)){
+            if (StringUtils.isEmpty(result)) {
                 bo.setDetailResponseCode(Constants.ERROR_5000);
                 bo.setGroupResponseCode(Constants.ERROR_5000);
-            }else{
+            } else {
                 bo = gson.fromJson(result, BoNotifyQueryBOrder.class);
-            }          
-            
+            }
+
         } catch (Exception e) {
             Constants.appendMessage(super.getLogBuilder(), "Fail InvokeNotify");
         }
@@ -352,7 +357,7 @@ final class VerifyOTPRequestProcessor extends BaseRequestProcessor {
         // check status of notify merchant and order status
         try {
             BoMiNotifyResponse boMiNotify = new BoMiNotifyResponse(Constants.RESPONSE_CODE_1, Constants.RESPONSE_CODE_1);
-                    //invokeNotifyMerchant(boEIB.getMiNotifyUrl(), boOrder.getOrderNo(), checksumMerchant);
+            //invokeNotifyMerchant(boEIB.getMiNotifyUrl(), boOrder.getOrderNo(), checksumMerchant);
 
             if (boMiNotify.getGroupResponseCode().equals(Constants.RESPONSE_CODE_1)
                     && boOrder.getOrderStatus().intValue() == 1) {
@@ -395,12 +400,12 @@ final class VerifyOTPRequestProcessor extends BaseRequestProcessor {
             json.addProperty("checksum", dataSign);
             NotifyHelper notifyH = new NotifyHelper();
             String result = notifyH.postNotify(notifyUrl, json, "application/json", "application/json");
-            if(StringUtils.isEmpty(result)){
+            if (StringUtils.isEmpty(result)) {
                 bo.setDetailResponseCode(Constants.ERROR_5000);
                 bo.setGroupResponseCode(Constants.ERROR_5000);
-            }else{
+            } else {
                 bo = gson.fromJson(result, BoMiNotifyResponse.class);
-            }                
+            }
             return bo;
         } catch (Throwable e) {
             System.err.println("invokeNotifyMerchant error: " + e.getMessage());
@@ -488,7 +493,7 @@ final class VerifyOTPRequestProcessor extends BaseRequestProcessor {
 
         return true;
     }
-    
+
     private void buildResponse(BoProcessPaymentResponse boResponse, BoBaseResponse boBase) {
         boResponse.setOrderNo(boBase.getOrderNo());
         boResponse.setGroupResponseCode(boBase.getGroupResponseCode());

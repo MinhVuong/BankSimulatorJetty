@@ -158,6 +158,7 @@ public class BankServiceImpl implements IBankService {
         BoBSOtp boBSOtp = CallSPLoadOrderVerifyOTP(orderNo, responseCode);
         if((boBSOtp == null) || 
                 (StringUtils.isEmpty(responseCode.toString()))){
+            boBSOtp = new BoBSOtp();
             boBSOtp.setResponseCode(Constants.ERROR_5000);
         }else
             boBSOtp.setResponseCode(responseCode.toString());
@@ -168,7 +169,7 @@ public class BankServiceImpl implements IBankService {
     private BoBSOtp CallSPLoadOrderVerifyOTP(String orderNo, StringBuilder responseCode){
         String sp = "{call SP_BI_BS_GET_ORDER_INFO_V_OTP(?,?,?)}";
         try (Connection conn = RDbClientManager.Instance.get(RDbClientName.Oracle).getConnection()){
-            BoBSOtp boBSOTP = new BoBSOtp();
+            
             CallableStatement cs = conn.prepareCall(sp);
             cs.setString(1, orderNo);
             cs.registerOutParameter(3, Types.INTEGER);
@@ -196,7 +197,7 @@ public class BankServiceImpl implements IBankService {
                     String merchantTransactionId = rs.getString("M_TRANSACTIONID");
                     String cardNo = rs.getString("CARD_NO");
                     String subBankCode = rs.getString("SUB_BANK");
-                    
+                    BoBSOtp boBSOTP = new BoBSOtp();
                     boBSOTP.setOrderNo(orderNo);
                     boBSOTP.setTotalAmount(totalAmount);
                     boBSOTP.setOpAmount(opAmount);
@@ -212,10 +213,14 @@ public class BankServiceImpl implements IBankService {
                     boBSOTP.setMerchantTransactionId(merchantTransactionId);
                     boBSOTP.setCardNo(cardNo);
                     boBSOTP.setSubbankCode(subBankCode);
+                    System.out.println("BoBSOTP: " + gson.toJson(boBSOTP));
+                    return boBSOTP;
                 }
-                System.out.println("BoBSOTP: " + gson.toJson(boBSOTP));
+                
+            }else{
+                return null;
             }
-            return boBSOTP;
+            return null;
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return null;

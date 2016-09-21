@@ -129,7 +129,6 @@ public final class Service extends Application {
      * @return
      */
     @POST
-    @GET
     @Path(Service.VERIFY_CARD)
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -143,7 +142,6 @@ public final class Service extends Application {
      * @return
      */
     @POST
-    @GET
     @Path(Service.VERIFY_OTP)
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

@@ -39,11 +39,13 @@ public class Constants {
     public static final String ERROR_7202 = "7202";
     public static final String ERROR_7213 = "7213";
     public static final String ERROR_7222 = "7222";
+    public static final String ERROR_7299 = "7299";
     public static final String ERROR_7230 = "7230";
     public static final String ERROR_7233 = "7233";
     public static final String ERROR_7234 = "7234";
     public static final String ERROR_7235 = "7235";
     public static final String ERROR_7255 = "7255";
+    public static final String ERROR_7402 = "7402";
     
     public static final String INVALID_TRANX_RESULT = "-888888";
     public static final String RESPONSE_TIME_OUT = "-999999";

@@ -195,6 +195,7 @@ final class VerifyCardRequestProcessor extends BaseRequestProcessor {
                     || Constants.ERROR_7007.equals(responseCode)
                     || Constants.ERROR_7100.equals(responseCode)
                     || Constants.ERROR_7221.equals(responseCode)
+                    || Constants.ERROR_7402.equals(responseCode)
                     || Constants.INVALID_TRANX_RESULT.equals(responseCode)) {
                 // return error code for show match message => notify merchant => return payport url
                 boBaseResponse = Service.commonService.getResponse(responseCode);
