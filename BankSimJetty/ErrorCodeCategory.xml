@@ -1,0 +1,16 @@
+<ErrorCode>
+    <APIs>
+        <API>
+            <Name>VerifyCard</Name>
+            <StatusPeding>
+                <Code>7232</Code>
+                <Code>7231</Code>
+                <Code>7211</Code>
+            </StatusPeding>
+            <StatusFail>
+                <Code>7302</Code>
+                <Code>7007</Code>
+            </StatusFail>
+        </API>
+    </APIs>
+</ErrorCode>

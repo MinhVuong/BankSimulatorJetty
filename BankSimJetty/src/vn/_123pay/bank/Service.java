@@ -24,9 +24,11 @@ import vn._123pay.data.dbms.relational.RDbClientName;
 import vn._123pay.server.jetty.EmbededServer;
 import vn._123pay.util.ExceptionUtil;
 import vng.paygate.bank.jaxb.adapter.BoBIModuleConfigNew;
+import vng.paygate.bank.jaxb.adapter.ErrorCode;
 import vng.paygate.config.service.impl.BankServiceImpl;
 import vng.paygate.config.service.impl.ConfigServiceImpl;
 import vng.paygate.domain.common.CommonService;
+import vng.paygate.domain.common.ErrorCodeHelper;
 import vng.paygate.security.SecurityHelper;
 
 /**
@@ -42,6 +44,7 @@ public final class Service extends Application {
     static final String VERIFY_CARD = "verifyCard";
     static final String VERIFY_OTP = "verifyOTP";
     public static ConfigServiceImpl configService;
+    public static ErrorCodeHelper errorCodeH;
     public static CommonService commonService = new CommonService();
     private static final String MODULE_NAME = System.getProperty("zname");
     private SecurityHelper securityH = new SecurityHelper();
@@ -106,6 +109,20 @@ public final class Service extends Application {
             System.err.println("Don't load config Service!!!");    
             exit(1);
         }
+        
+        try{
+            String nameFile = "ErrorCodeCategory.xml";
+            errorCodeH = new ErrorCodeHelper(nameFile);
+            if(errorCodeH.getErrorCodes() == null){
+                System.err.println("Don't load config Error Code!!!");    
+                exit(1);
+            }
+        }catch(Exception e){
+            System.err.println("Don't load config Error Code!!!");    
+            exit(1);
+        }
+        
+        
         EmbededServer server = new EmbededServer(minThreads, maxThreads)
                 .setHttpPort(port)
                 .setHandler(Service.class);
